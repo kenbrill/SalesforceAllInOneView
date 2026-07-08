@@ -1,0 +1,105 @@
+<template>
+    <lightning-card title="My Accounts" icon-name="standard:account">
+        <div class="slds-p-around_medium">
+
+            <template lwc:if={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading accounts" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <template lwc:elseif={hasError}>
+                <div class="slds-scoped-notification slds-media slds-media_center slds-theme_error">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="utility:error" size="small" variant="inverse" alternative-text="Error"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <p>{errorMessage}</p>
+                    </div>
+                </div>
+            </template>
+
+            <template lwc:elseif={isEmpty}>
+                <p class="slds-text-body_regular slds-text-color_weak slds-p-around_medium">
+                    No accounts found owned by you.
+                </p>
+            </template>
+
+            <template lwc:else>
+                <!-- Level 1: Accounts -->
+                <lightning-accordion allow-multiple-sections-open>
+                    <template for:each={accounts} for:item="account">
+                        <lightning-accordion-section
+                            key={account.id}
+                            name={account.id}
+                            label={account.name}>
+
+                            <template lwc:if={account.hasContacts}>
+                                <!-- Level 2: Contacts -->
+                                <lightning-accordion allow-multiple-sections-open>
+                                    <template for:each={account.contacts} for:item="contact">
+                                        <lightning-accordion-section
+                                            key={contact.id}
+                                            name={contact.id}
+                                            label={contact.fullName}>
+
+                                            <div class="slds-p-bottom_small slds-text-body_small">
+                                                <lightning-icon
+                                                    icon-name="utility:email"
+                                                    size="x-small"
+                                                    alternative-text="Email">
+                                                </lightning-icon>
+                                                <span class="slds-m-left_x-small">{contact.email}</span>
+                                            </div>
+
+                                            <template lwc:if={contact.hasOpportunities}>
+                                                <!-- Level 3: Opportunities -->
+                                                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                                    <thead>
+                                                        <tr class="slds-line-height_reset">
+                                                            <th class="slds-text-title_caps" scope="col">Opportunity</th>
+                                                            <th class="slds-text-title_caps" scope="col">Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <template for:each={contact.opportunities} for:item="opp">
+                                                            <tr key={opp.id}>
+                                                                <td>
+                                                                    <lightning-icon
+                                                                        icon-name="standard:opportunity"
+                                                                        size="x-small"
+                                                                        class="slds-m-right_x-small"
+                                                                        alternative-text="Opportunity">
+                                                                    </lightning-icon>
+                                                                    {opp.name}
+                                                                </td>
+                                                                <td>{opp.amount}</td>
+                                                            </tr>
+                                                        </template>
+                                                    </tbody>
+                                                </table>
+                                            </template>
+                                            <template lwc:else>
+                                                <p class="slds-text-color_weak slds-text-body_small slds-p-vertical_x-small">
+                                                    No opportunities linked to this contact.
+                                                </p>
+                                            </template>
+
+                                        </lightning-accordion-section>
+                                    </template>
+                                </lightning-accordion>
+                            </template>
+                            <template lwc:else>
+                                <p class="slds-text-color_weak slds-text-body_small slds-p-vertical_x-small">
+                                    No contacts for this account.
+                                </p>
+                            </template>
+
+                        </lightning-accordion-section>
+                    </template>
+                </lightning-accordion>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

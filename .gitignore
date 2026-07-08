@@ -1,0 +1,16 @@
+# Claude Code
+.claude/
+
+# TokenSave (Claude Code plugin)
+.tokensave/
+
+# Salesforce DX
+.sfdx/
+.localdevserver/
+*.dup
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
