@@ -14,3 +14,7 @@ node_modules/
 
 # OS
 .DS_Store
+
+# Video source files
+*.mov
+*.mp4
